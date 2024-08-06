@@ -37,6 +37,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 - [x] setup do banco de dados
 - [x] seeding do banco de dados(colocar dados)
-- []introdução ao next.js
+- [x]introdução ao next.js
 - [] tailwind e shadon
 - [] git hook
