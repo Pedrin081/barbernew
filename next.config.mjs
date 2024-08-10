@@ -1,12 +1,12 @@
- { hostname } from 'os';
-
 /** @type {import('next').NextConfig} */
-const nextConfig = { 
+const nextConfig = {
     images: {
-        remotePatterns: {
-            hostname:  "utfs.io",
+      remotePatterns: [
+        {
+          hostname: "utfs.io",
         },
+      ],
     },
-};
-
-export default nextConfig;
+  }
+  
+  export default nextConfig

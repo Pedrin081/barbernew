@@ -67,9 +67,7 @@ const Home = async () => {
       Recomendados
     </h2>
     
-    {barbershops.map((barbershop) => (
-            <BarbershopItem key={barbershop.id} barbershop={barbershop} />
-          ))}
+    {barbershops.map(barbershop => <BarbershopItem key={barbershop.id} barbershop={barbershop}/>)}
     </div>
   </div >
 
