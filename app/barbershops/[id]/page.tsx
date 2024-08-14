@@ -1,6 +1,6 @@
 import PhoneItem from "@/app/_components/phone-item";
-import ServiceItem from "@/app/_components/service-item";
 import { Button } from "@/app/_components/ui/button";
+import ServiceItem from "@/app/_components/service-item";
 import { db } from "@/app/_lib/prisma";
 import { ChevronLeftIcon, MapPinIcon, MenuIcon, StarIcon } from "lucide-react";
 import Image from "next/image";

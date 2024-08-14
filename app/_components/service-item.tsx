@@ -15,10 +15,13 @@ import { Calendar } from "./ui/calendar"
 import { ptBR } from "date-fns/locale"
 import { useEffect, useMemo, useState } from "react"
 import { isPast, isToday, set } from "date-fns"
+import { createBooking } from "../_actions/create-booking"
 import { useSession } from "next-auth/react"
 import { toast } from "sonner"
+import { getBookings } from "../_actions/get-bookings"
 import { Dialog, DialogContent } from "./ui/dialog"
 import SignInDialog from "./sign-in-dialog"
+import BookingSummary from "./booking-summary"
 import { useRouter } from "next/navigation"
 
 interface ServiceItemProps {
@@ -88,7 +91,17 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
   const [dayBookings, setDayBookings] = useState<Booking[]>([])
   const [bookingSheetIsOpen, setBookingSheetIsOpen] = useState(false)
 
-  
+  useEffect(() => {
+    const fetch = async () => {
+      if (!selectedDay) return
+      const bookings = await getBookings({
+        date: selectedDay,
+        serviceId: service.id,
+      })
+      setDayBookings(bookings)
+    }
+    fetch()
+  }, [selectedDay, service.id])
 
   const selectedDate = useMemo(() => {
     if (!selectedDay || !selectedTime) return
@@ -120,7 +133,25 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
     setSelectedTime(time)
   }
 
-  
+  const handleCreateBooking = async () => {
+    try {
+      if (!selectedDate) return
+      await createBooking({
+        serviceId: service.id,
+        date: selectedDate,
+      })
+      handleBookingSheetOpenChange()
+      toast.success("Reserva criada com sucesso!", {
+        action: {
+          label: "Ver agendamentos",
+          onClick: () => router.push("/bookings"),
+        },
+      })
+    } catch (error) {
+      console.error(error)
+      toast.error("Erro ao criar reserva!")
+    }
+  }
 
   const timeList = useMemo(() => {
     if (!selectedDay) return []
@@ -229,8 +260,23 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
                     </div>
                   )}
 
-                 
-                  
+                  {selectedDate && (
+                    <div className="p-5">
+                      <BookingSummary
+                        barbershop={barbershop}
+                        service={service}
+                        selectedDate={selectedDate}
+                      />
+                    </div>
+                  )}
+                  <SheetFooter className="mt-5 px-5">
+                    <Button
+                      onClick={handleCreateBooking}
+                      disabled={!selectedDay || !selectedTime}
+                    >
+                      Confirmar
+                    </Button>
+                  </SheetFooter>
                 </SheetContent>
               </Sheet>
             </div>
